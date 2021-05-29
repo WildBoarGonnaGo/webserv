@@ -10,4 +10,4 @@
 ### Про селект и сокет
 
 + [Асинхронный ввод и вывод (Eng)](http://www.wangafu.net/~nickm/libevent-book/01_intro.html)
-+ [Концепт вебсервера и примеры(Eng)](https://www.youtube.com/watch?v=9J1nJOivdyw)
++ [Концепт вебсервера и примеры (Eng)](https://www.youtube.com/watch?v=9J1nJOivdyw)
