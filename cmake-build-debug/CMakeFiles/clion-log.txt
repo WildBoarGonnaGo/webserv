@@ -1,0 +1,6 @@
+/snap/clion/152/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/lchantel/webserv
+-- Configuring done
+CMake Error: Cannot determine link language for target "webserv".
+CMake Error: CMake can not determine linker language for target: webserv
+-- Generating done
+CMake Generate step failed.  Build files cannot be regenerated correctly.
