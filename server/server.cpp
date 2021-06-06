@@ -35,6 +35,13 @@
 #include <fcntl.h>
 // fcntl
 
+#define SOCKET_PORT	"8000"
+
+int			create_socket(const char *port)
+{
+	int		fd;
+}
+
 int			main()
 {
 	return (0);
