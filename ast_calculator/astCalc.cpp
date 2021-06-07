@@ -62,7 +62,7 @@ bool				tokens::checkMatch(std::list<std::string> terms) {
 	int	prevPos = _pos;
 	std::string result = matchNoExcept(terms);
 	_pos = prevPos;
-	return (result.empty());
+	return (!result.empty());
 }
 /*
 matchNoExcept - распознает одну из строк, при этом указатель смещается
@@ -143,7 +143,7 @@ char const *astCalc::numErrorCatch::what() const throw() {
 	return ("fatal error: invalid NUMBER input");
 }
 // NUMBER - число (реализация в грамматике не описана)
-double	astCalc::getNUMBER() {
+double	    astCalc::getNUMBER() {
 	std::string	number;
 	int			pointNum = 0;
 
@@ -161,5 +161,42 @@ double	astCalc::getNUMBER() {
 
 //group      -> "(" add ")" | NUMBER
 double	astCalc::group() {
-	
-};
+	std::list<std::string>  tmp;
+	double                  result;
+
+	tmp.push_back("(");
+	if (checkMatch(tmp)) {
+		match("(");
+		result = add();
+		match(")");
+		return (result);
+	} else
+		return (NUMBER());
+}
+
+//mult       -> group ( ("*" | "/") group)*
+double  astCalc::mult() {
+	std::list<std::string>  tmp;
+	double                  result;
+	std::string             oper;
+	double                  multVal;
+
+	tmp.push_back("*");
+	tmp.push_back("/");
+	while (isMatch(tmp)) { // Повторяем нужное количество раз
+		oper = match(tmp); // разбор альтернативы
+		multVal = group();
+		result = (!oper.compare("*")) ? result * multVal :
+										result / multVal;
+	};
+	return (result);
+}
+//add        -> mult ( ("+" | "-") mult)*
+double	astCalc::add() {
+	double                  result;
+	std:list<std::string>   term;
+
+	return ()
+}
+//result     -> add
+double	result();
