@@ -1,48 +1,42 @@
-#include <iostream>
-#include <string>
+#include "Server.hpp"
 
-// C libraries
-#include <arpa/inet.h>
-// htonl
-// htons
-// ntohl
-// ntohs
-// inet_addr
-
-#include <sys/select.h>
-// select
-
-#include <pool.h>
-// pool
-
-#include <sys/epoll.h>
-// epool
-
-#include <sys/types.h>
-// kqueue
-
-#include <sys/socket.h>
-// socket
-// accept
-// listen
-// send
-// recv
-// bind
-// connect
-// setsockopt
-// getsockname
-
-#include <fcntl.h>
-// fcntl
-
-#define SOCKET_PORT	"8000"
-
-int			create_socket(const char *port)
+Server::Server() : _sockfd(0), _sockip("0.0.0.0"), _socklen(0)
 {
-	int		fd;
 }
 
-int			main()
+Server::~Server()
 {
-	return (0);
+}
+
+Server::Server( Server const &s )
+{
+	*this = s;
+}
+
+Server&				Server::operator=( Server const &s )
+{
+	if (this != &s)
+	{
+		;
+	}
+	return *this;
+}
+
+void 				Server::setFdSocket( int sockfd )
+{
+	_sockfd = sockfd;
+}
+
+int 				Server::getFdSocket() const
+{
+	return _sockfd;
+}
+
+void				Server::setIPSocket( const char *sockip )
+{
+	_sockip = sockip;
+}
+const char*			Server::getIPSocket() const
+{
+	return _sockip;
 }

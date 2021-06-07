@@ -2,12 +2,12 @@
 # define HEADER_SERVER_HPP
 
 // C++ libraries
-#include <iostream>
-#include <string>
-#include <cstring>
+# include <iostream>
+# include <string>
+# include <cstring>
 
 // C libraries
-#include <arpa/inet.h>
+# include <arpa/inet.h>
 /*
 ** htonl
 ** htons
@@ -16,27 +16,27 @@
 ** inet_addr
 */
 
-#include <sys/select.h>
+# include <sys/select.h>
 /*
 ** select
 */
 
-#include <pool.h>
-/*
-** pool
-*/
+//#include <pool.h>
+///*
+//** pool
+//*/
+//
+//#include <sys/epoll.h>
+///*
+//** epool
+//*/
 
-#include <sys/epoll.h>
-/*
-** epool
-*/
-
-#include <sys/types.h>
+# include <sys/types.h>
 /*
 ** kqueue
 */
 
-#include <sys/socket.h>
+# include <sys/socket.h>
 /*
 ** socket
 ** accept
@@ -49,10 +49,12 @@
 ** getsockname
 */
 
-#include <fcntl.h>
+# include <fcntl.h>
 /*
 ** fcntl
 */
+
+# include <stdlib.h>
 
 #define SOCKET_PORT	"8000"
 #define SOCKET_IP	"127.0.0.1"
