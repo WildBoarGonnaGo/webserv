@@ -1,7 +1,7 @@
 #include "headserv.hpp"
 #include <unistd.h>
 #include "Server.hpp"
-#include "Client.hpp"
+//#include "Client.hpp"
 
 # define BIND_ERROR			"Error: bind: "
 # define INET_ADDR_ERROR	"Error: inet_addr: "
@@ -22,7 +22,7 @@ void 		error(const char *err, const char *strerr)
 	PRINT("\n");
 }
 
-void			sockcreate( Server &server )
+void			sockcreate( webserv::Server &server )
 {
 	int 					res;
 	int 					opt = 1;
