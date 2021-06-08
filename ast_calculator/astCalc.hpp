@@ -23,19 +23,20 @@
 class   tokens {
 protected:
 	// разбираемая строка
-	std::string 		_str = NULL;
+	std::string 		_str;
 	// Позиция строки
-	size_t				_pos = 0;
+	size_t				_pos;
 	// незначащие символы - прообельные символы по умолчанию
 	std::string   		_whitespaces;
 public:
 	tokens();
 	tokens(const tokens &rhs);
 	tokens(std::string const &src);
+	virtual ~tokens();
 
 	tokens				&operator=(const tokens &rhs);
-	std::string const	getStr() const;
-	int const			getPos() const;
+	std::string const	&getStr() const;
+	size_t const		&getPos() const;
 	class				tokenException : public std::exception {
 		public:
 			virtual const char *what() const throw();
@@ -76,6 +77,7 @@ class   astCalc : public tokens {
 		astCalc();
 		astCalc(std::string src);
 		astCalc(const astCalc &rhs);
+		virtual ~astCalc();
 
 		astCalc	&operator=(const astCalc &rhs);
 		class	numErrorCatch {
@@ -92,8 +94,9 @@ class   astCalc : public tokens {
 		double	add();
 		//result     -> add
 		double	result();
+		/* Метод, вызывающий начальное правило грамматики и
+		соответствующие вычисления */
+		double	execute();
 };
-
-
 
 #endif

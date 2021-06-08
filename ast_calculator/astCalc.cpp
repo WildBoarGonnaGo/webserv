@@ -18,11 +18,14 @@ tokens::tokens(std::string const &src) : _str(src), _pos(0), _whitespaces(" \n\t
 tokens	&tokens::operator=(const tokens &rhs) {
 	this->_pos = rhs.getPos();
 	this->_str = rhs.getStr();
+	return (*this);
 }
 
-std::string const	tokens::getStr() const { return (_str); }
+tokens::~tokens( ) { }
 
-int const			tokens::getPos() const { return (_pos); }
+std::string const	&tokens::getStr() const { return (_str); }
+
+size_t const 		&tokens::getPos() const { return (_pos); }
 //len - длина строки
 int					tokens::len() {
 	 return (_str.size());
@@ -79,8 +82,8 @@ std::string			tokens::matchNoExcept(std::list<std::string> terms) {
 		prevPos = getPos();
 		match = true;
 		tmp = *it;
-		for (int i = 0; i < tmp.size(); i++) {
-			if (tmp[i] == _str[i])
+		for (ulong i = 0; i < tmp.size(); i++) {
+			if (tmp[i] == current())
 				next();
 			else {
 				_pos = prevPos;
@@ -100,16 +103,18 @@ std::string			tokens::matchNoExcept(std::list<std::string> terms) {
 и пропускаются незначащие символы, если ни одну из строк распознать
 нельзя, то выбрасывается исключение*/	
 std::string			tokens::match(std::list<std::string> terms) {
-	int 		pos = getPos();
+	//int 		pos = getPos();
 	std::string	result = matchNoExcept(terms);
 	if (result.empty())
 		throw tokens::tokenException();
+	//_pos = pos;
 	return (result);
 }
 
 /*Перегрузка функции матч для принятия одной строки*/
 std::string			tokens::match(std::string sample) {
 	std::list<std::string>	tmp(1, sample);
+
 	try
 	{
 		std::string result = matchNoExcept(tmp);
@@ -121,16 +126,19 @@ std::string			tokens::match(std::string sample) {
 	{
 		std::cerr << e.what() << '\n';
 	}
+	return (std::string());
 }
 
 astCalc::astCalc() : tokens(std::string()) { }
 
 astCalc::astCalc(std::string src) : tokens(src) { }
 
-astCalc::astCalc(const astCalc &rhs) {
+astCalc::astCalc(const astCalc &rhs) : tokens() {
 	if (this != &rhs)
 		*this = rhs;
 }
+
+astCalc::~astCalc( ) { }
 
 astCalc	&astCalc::operator=(const astCalc &rhs) {
 	this->_str = rhs.getStr();
@@ -151,9 +159,9 @@ double	    astCalc::getNUMBER() {
 		number.push_back(current());
 		if (current() == '.')
 			++pointNum;
+		next();
 	}
-	if (pointNum == 2 || !number.size()
-		|| _whitespaces.find(_str[_pos]) == std::string::npos)
+	if (pointNum == 2 || !number.size())
 		throw astCalc::numErrorCatch();
 	skip();
 	return (atof(number.c_str()));
@@ -171,7 +179,7 @@ double	astCalc::group() {
 		match(")");
 		return (result);
 	} else
-		return (NUMBER());
+		return (getNUMBER());
 }
 
 //mult       -> group ( ("*" | "/") group)*
@@ -183,20 +191,54 @@ double  astCalc::mult() {
 
 	tmp.push_back("*");
 	tmp.push_back("/");
-	while (isMatch(tmp)) { // Повторяем нужное количество раз
+	result = group();
+	while (checkMatch(tmp)) { // Повторяем нужное количество раз
 		oper = match(tmp); // разбор альтернативы
 		multVal = group();
 		result = (!oper.compare("*")) ? result * multVal :
 										result / multVal;
+		
 	};
 	return (result);
 }
 //add        -> mult ( ("+" | "-") mult)*
 double	astCalc::add() {
 	double                  result;
-	std:list<std::string>   term;
+	std::list<std::string>	term;
+	std::string				oper;
+	double					rvalue;
 
-	return ()
+	term.push_back("+");
+	term.push_back("-");
+	result = mult();
+	while (checkMatch(term)) {
+		oper = match(term);
+		rvalue = mult();
+		result = (!oper.compare("+")) ? result + rvalue : result - rvalue;
+	}
+	return (result);
 }
 //result     -> add
-double	result();
+double	astCalc::result() {
+	return (add());
+}
+/* Метод, вызывающий начальное правило грамматики и
+соответствующие вычисления */
+double	astCalc::execute() {
+	double res;
+
+	try
+	{
+		skip();
+		res = result();
+		if (isEnd())
+			return (res);
+	else
+		throw numErrorCatch();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "fatal error: end of line is not reached" << '\n';
+	}
+	return (0);
+}
