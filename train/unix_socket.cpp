@@ -36,7 +36,8 @@ int main(void) {
 		if ((cfd = accept(sfd, nullptr, nullptr)) == -1)
 			ErrOutput("error: can't create reliable connection between peer and server");
 		while ((b = read(cfd, &buf, 1024)) > 0) {
-			std::cout << "Recieved message: " << buf << std::endl;
+			if ((write(STDOUT_FILENO, &buf, b)) != b)
+				ErrOutput("error: partial/failed write: ");
 			std::memset(&buf, 0, 1024);
 		}
 		if (b == -1)
