@@ -4,4 +4,4 @@ project(client)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(${PROJECT_NAME} unix_udp_client.cpp)
+add_executable(${PROJECT_NAME} ipv4_udp_client.cpp)

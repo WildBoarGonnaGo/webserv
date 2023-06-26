@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	std::string cl_path = "/tmp/cl_udp." + std::to_string(getpid()) + ".soc";
 	char buf[128] = { 0 };
 
-	int clSock = socket(AF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC, 0);
+	int clSock = socket(AF_UNIX, SOCK_DGRAM, 0);
 	if (clSock == -1)
 		ErrOutput("error: can't create socket: ");
 
