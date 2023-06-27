@@ -57,7 +57,7 @@ int main(void) {
 					  + std::to_string(ntohs(cl.sin_port)) + "): ");
 		if (bytes == 0)
 			continue ;
-		std::cout << "Server recieved " << bytes << " from (" + HostOrderAddrPres(cl.sin_addr.s_addr)
+		std::cout << "Server recieved " << bytes << " bytes from (" + HostOrderAddrPres(cl.sin_addr.s_addr)
 			+ ", " + std::to_string(ntohs(cl.sin_port)) << ")" << std::endl;
 		for (ssize_t i = 0; i < bytes; ++i)
 			buf[i] = toupper(buf[i]);
