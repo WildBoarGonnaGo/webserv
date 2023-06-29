@@ -18,16 +18,19 @@ void SysError(const std::string &prefix) {
 
 ssize_t ReadLine(int fd, char *line, size_t n) {
 	char *buf = line;
-	ssize_t num = 0;
+	size_t num = 0;
 	char ch;
+	char kek[2] = { 0 };
 
 	if (n <= 0 || !line) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	for (size_t i = 0; i < n - 1; ++i) {
-		ssize_t byte = read(fd, &ch, 1);
+
+	for (int i = 0; i < n - 1; ++i) {
+		ssize_t byte = read(fd, kek, 1);
+		kek[1] = '\0';
 		if (byte == -1) {
 			ErrOutput("error: ReadLine: can't read data: ");
 			if (errno == EINTR) {
@@ -41,11 +44,12 @@ ssize_t ReadLine(int fd, char *line, size_t n) {
 		else {
 			if (i < n - 1) {
 				++num;
-				*(buf++) = ch;
+				*(buf++) = kek[0];
 			}
-			if (ch == '\n')
+			if (kek[0] == '\n')
 				break ;
 		}
+		kek[0] = '\0';
 	}
 	*buf = 0;
 	return num;

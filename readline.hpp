@@ -14,7 +14,9 @@
 #include <cerrno>
 #include <iostream>
 
-ssize_t ReadLine(int fd, char *line);
+#define SRV_PORT "49600"
+
+ssize_t ReadLine(int fd, char *line, size_t n);
 void ErrOutput(const std::string &prefix);
 void SysError(const std::string &prefix);
 
