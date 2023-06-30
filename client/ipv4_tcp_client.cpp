@@ -100,15 +100,18 @@ int main(int argc, char *argv[]) {
 	}
 	std::string req;
 	ssize_t bytes;
+	req += std::string(argv[2]) + "\n";
 	for (int i = 0; i < seq; ++i) {
+		std::string auxNum;
 		std::memset(num, 0, numLen);
 		std::cout << "request number " << i + 1 << ": ";
-		bytes = ReadLine(STDIN_FILENO, num, numLen);
-		if (bytes == -1)
-			SysError("error: can't read data from input filestream: ");
-		req += std::string(num);
+		std::cin >> auxNum;
+		//bytes = ReadLine(STDIN_FILENO, num, numLen);
+		//if (bytes == -1)
+		//	SysError("error: can't read data from input filestream: ");
+		req += auxNum + "\n";
 	}
-	req[req.size() - 1] = '\0';
+	//req[req.size() - 1] = '\0';
 	bytes = write(sock, req.c_str(), req.size());
 	if (bytes == -1) {
 		if (close(sock) == -1)
@@ -117,8 +120,8 @@ int main(int argc, char *argv[]) {
 				 + ", " + std::string(srv) + ": ");
 	}
 	std::memset(num, 0, numLen);
-	int c = 0;
-	while ((bytes = ReadLine(sock, num, numLen)) > 0) {
+	int c = 0, thrs = seq + 1;
+	while (c < thrs && (bytes = ReadLine(sock, num, numLen)) > 0) {
 		std::cout << "Sequence number " << ++c << ": " << num;
 		std::memset(num, 0, numLen);
 	}

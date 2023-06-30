@@ -144,9 +144,14 @@ int main(int argc, char *argv[]) {
 		if (cl == -1)
 			SysError("can't accept connection from client: ");
 		GetResolvedName(&addr_cl, host, srv);
-		while ((bytes = ReadLine(cl, reqNumStr, numLen)) > 0) {
-			std::cout << "Server received " << numLen << " bytes from ("
-				<< host << ", " << srv << ")" << std::endl;
+		bytes = ReadLine(cl, reqNumStr, numLen);
+		if (bytes <= 0) {
+			std::cerr << "error: no data is received: " << std::endl;
+			return -1;
+		}
+		int c = 0, thrs = std::atoi(reqNumStr);
+		std::memset(reqNumStr, 0, numLen);
+		while (c < thrs && (bytes = ReadLine(cl, reqNumStr, numLen)) > 0 ) {
 
 			int reqNum = std::atoi(reqNumStr);
 			if (reqNum < 0) {
@@ -154,14 +159,16 @@ int main(int argc, char *argv[]) {
 				memset(reqNumStr, 0, numLen);
 				continue ;
 			}
-			std::cout << "received number: " << reqNumStr;
+			std::cout << "received number from (" << host << ", "
+				<< srv << "): seq_num " << c + 1 << ": " << reqNumStr;
 			aux += std::to_string(seqNum) + "\n";
-			seqNum += reqNum - 1;
+			seqNum += reqNum;
 			std::memset(seqNumStr, 0, sizeof(seqNumStr));
 			std::memset(reqNumStr, 0, sizeof(reqNumStr));
 			strcpy(seqNumStr, std::to_string(seqNum).c_str());
+			++c;
 		}
-		aux += std::to_string(seqNum);
+		aux += std::to_string(seqNum) + "\n";
 		if (bytes == -1)
 			SysError("Error: can't read data from (" + std::string(host)
 					 + ", " + std::string(srv) + ": ");
