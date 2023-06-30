@@ -88,11 +88,6 @@ int main(int argc, char *argv[]) {
 	}
 	freeaddrinfo(cli);
 	int seq = (argc > 2) ? std::atoi(argv[2]) : 1;
-	/*if (errno) {
-		if (close(sock) == -1)
-			SysError("error: can't close socket: ");
-		SysError("error: atoi: ");
-	}*/
 	if (seq < 1) {
 		std::cerr << "error: " << seq << ": sequence number can't be less than 1";
 		if (close(sock) == -1)
@@ -106,12 +101,8 @@ int main(int argc, char *argv[]) {
 		std::memset(num, 0, numLen);
 		std::cout << "request number " << i + 1 << ": ";
 		std::cin >> auxNum;
-		//bytes = ReadLine(STDIN_FILENO, num, numLen);
-		//if (bytes == -1)
-		//	SysError("error: can't read data from input filestream: ");
 		req += auxNum + "\n";
 	}
-	//req[req.size() - 1] = '\0';
 	bytes = write(sock, req.c_str(), req.size());
 	if (bytes == -1) {
 		if (close(sock) == -1)

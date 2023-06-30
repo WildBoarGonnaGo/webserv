@@ -14,35 +14,6 @@
 #include <climits>
 
 
-/*void *InetAddrInfo(const struct addrinfo *info) {
-	struct sockaddr_in *ipv4_addr = nullptr;
-	struct sockaddr_in6 *ipv6_addr = nullptr;
-
-	if (info->ai_family == AF_INET) {
-		ipv4_addr = (struct sockaddr_in *)info->ai_addr;
-		return &ipv4_addr->sin_addr;
-	}
-	else {
-		ipv6_addr = (struct sockaddr_in6 *)info->ai_addr;
-		return &ipv6_addr->sin6_addr;
-	}
-
-}
-
-uint16_t InetPortInfo(const struct addrinfo *info) {
-	struct sockaddr_in *ipv4_addr = nullptr;
-	struct sockaddr_in6 *ipv6_addr = nullptr;
-
-	if (info->ai_family == AF_INET) {
-		ipv4_addr = (struct sockaddr_in *)info->ai_addr;
-		return ipv4_addr->sin_port;
-	}
-	else {
-		ipv6_addr = (struct sockaddr_in6 *)info->ai_addr;
-		return ipv6_addr->sin6_port;
-	}
-}*/
-
 void GetResolvedName(const struct addrinfo *addr, char *host, char *service) {
 	int err;
 
@@ -63,8 +34,27 @@ void GetResolvedName(const struct sockaddr *addr, char *host, char *service) {
 		SysError("error: can't resolve name: " + std::string(gai_strerror(err)) + ": ");
 }
 
+std::string InetHostAddrName(const struct sockaddr *addr, int af) {
+	if (af == AF_INET) {
+		struct sockaddr_in *ipv4_addr = (struct sockaddr_in *)addr;
+		char addrStr[INET_ADDRSTRLEN] = { 0 };
+
+		if (!inet_ntop(af, ipv4_addr, addrStr, INET_ADDRSTRLEN))
+			SysError("error: can't make presentation form of address: ");
+		return std::string(addrStr);
+	}
+	else  {
+		struct sockaddr_in6 *ipv6_addr = (struct sockaddr_in6 *)addr;
+		char addrStr[INET6_ADDRSTRLEN] = { 0 };
+
+		if (!inet_ntop(af, ipv6_addr, addrStr, INET6_ADDRSTRLEN))
+			SysError("error: can't make presentation form of address: ");
+		return std::string(addrStr);
+	}
+}
+
 int main(int argc, char *argv[]) {
-	int seqNum, sock, numLen = std::to_string(INT_MIN).size() + 1;
+	int seqNum, sock, af, numLen = std::to_string(INT_MIN).size() + 1;
 	uint16_t port;
 	char seqNumStr[numLen];
 	char reqNumStr[numLen];
@@ -73,6 +63,7 @@ int main(int argc, char *argv[]) {
 	struct addrinfo hints;
 	struct addrinfo *candi = nullptr, *roll = nullptr;
 	std::string resolve;
+	int seqNumGlbl = 0;
 
 	std::memset(seqNumStr, 0, numLen);
 	std::strcpy(seqNumStr, (argc > 1) ? argv[1] : "0");
@@ -117,11 +108,13 @@ int main(int argc, char *argv[]) {
 			if (close(sock) == -1)
 				SysError("error: can't close socket: ");
 			ErrOutput("error: can't bind socket to address (" + std::string(host)
-						+ ", " + std::string(srv) + ": ");
+						+ ", " + std::string(srv) + "): ");
 			continue ;
 		}
-		else
+		else {
+			af = roll->ai_family;
 			break ;
+		}
 	}
 	if (!roll) {
 		freeaddrinfo(candi);
@@ -129,9 +122,9 @@ int main(int argc, char *argv[]) {
 		return errno;
 	}
 	freeaddrinfo(candi);
+	std::cout << "Lauched server on address (" + std::string(host) + ", " + std::string(srv) + ")" << std::endl;
 	if (listen(sock, SOMAXCONN) == -1)
 		SysError("error: can't create listening buffer: ");
-	std::cout << "Lauched server on address (" + std::string(host) + ", " + std::string(srv) + ")" << std::endl;
 	while(true) {
 		struct sockaddr addr_cl;
 		socklen_t len = sizeof(struct sockaddr_storage);
@@ -159,8 +152,8 @@ int main(int argc, char *argv[]) {
 				memset(reqNumStr, 0, numLen);
 				continue ;
 			}
-			std::cout << "received number from (" << host << ", "
-				<< srv << "): seq_num " << c + 1 << ": " << reqNumStr;
+			std::cout << "received number from (" << InetHostAddrName(&addr_cl, af) << ", "
+				<< srv << "): seq_num " << ++seqNumGlbl << ": " << reqNumStr;
 			aux += std::to_string(seqNum) + "\n";
 			seqNum += reqNum;
 			std::memset(seqNumStr, 0, sizeof(seqNumStr));
@@ -176,7 +169,7 @@ int main(int argc, char *argv[]) {
 		if (!bytes)
 			ErrOutput("no data is sent: buffer is empty");
 		if (bytes == -1)
-			SysError("error: can't send data to client (" + std::string(host)
+			SysError("error: can't send data to client (" + InetHostAddrName(&addr_cl, af)
 					 + ", " + std::string(srv) + "): ");
 		if (close(cl) == -1)
 			SysError("error: can't close socket: ");
