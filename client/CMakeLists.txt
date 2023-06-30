@@ -4,4 +4,4 @@ project(client)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(${PROJECT_NAME} ipv4_tcp_client.cpp ../readline.cpp ../readline.hpp)
+add_executable(${PROJECT_NAME} ipv4v6_tcp_client.cpp ../readline.cpp ../readline.hpp)
