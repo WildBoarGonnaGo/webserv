@@ -15,6 +15,7 @@
 #include <iostream>
 
 #define SRV_PORT "49600"
+#define SERVICE_ECHO "echo"
 
 ssize_t ReadLine(int fd, char *line, size_t n);
 void ErrOutput(const std::string &prefix);
