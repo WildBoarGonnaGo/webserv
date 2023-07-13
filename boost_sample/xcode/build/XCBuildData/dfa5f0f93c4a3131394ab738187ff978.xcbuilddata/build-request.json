@@ -1,0 +1,61 @@
+{
+  "buildCommand" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "08d518388028be0b9b8a17b4a561329aa2bf7e3fe0df603abe225849c08c793b"
+    },
+    {
+      "guid" : "08d518388028be0b9b8a17b4a561329a6915c2cc4726bbe55e6aa1428678930b"
+    },
+    {
+      "guid" : "08d518388028be0b9b8a17b4a561329a678ad140651a632b21b700f9d9cad87d"
+    }
+  ],
+  "containerPath" : "/Users/mzavelskiy/webserv/boost_sample/xcode/unix_sv.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "x86_64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx13.3",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "x86_64h",
+        "x86_64"
+      ],
+      "targetArchitecture" : "x86_64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/mzavelskiy/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/mzavelskiy/Library/Developer/Xcode/DerivedData/unix_sv-caowtmouxfuertbntozbpziuztba/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/mzavelskiy/Library/Developer/Xcode/DerivedData/unix_sv-caowtmouxfuertbntozbpziuztba/Index.noindex/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
